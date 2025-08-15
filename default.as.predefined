@@ -143,6 +143,7 @@ class array<T> {
 class dictionaryValue {
     // FIXME: Is this class constructable?
     dictionaryValue (); // asBEHAVE_CONSTRUCT;
+    ~dictionaryValue (); // asBEHAVE_DESTRUCT;
 
     // The value assignment operator should be used to copy a value into the dictionaryValue.
     dictionaryValue& opAssign (const dictionaryValue& in dictvalue);
@@ -331,6 +332,7 @@ class ref {
     ref (); // asBEHAVE_CONSTRUCT;
     ref (const ref& in other); // asBEHAVE_CONSTRUCT;
     ref (const ?& in value); // asBEHAVE_CONSTRUCT;
+    ~ref (); // asBEHAVE_DESTRUCT;
 
     // The cast operator is used to perform a dynamic cast to the desired type.
     // If the type is not compatible with the object referred to by the ref type this will return null.
@@ -367,6 +369,7 @@ class weakref<T> {
     // FIXME: Is this constructor correct?
     weakref (); // asBEHAVE_CONSTRUCT;
     weakref (T@+ value) explicit; // asBEHAVE_CONSTRUCT;
+    ~weakref (); // asBEHAVE_DESTRUCT;
 
     // The implicit cast operator is used to cast the weak ref type to strong reference of the type.
     // If the object referred to by the weakref is already dead this operator will return null.
@@ -403,6 +406,7 @@ class const_weakref<T> {
     // FIXME: Is this constructor correct?
     const_weakref (); // asBEHAVE_CONSTRUCT;
     const_weakref (const T@+ value) explicit; // asBEHAVE_CONSTRUCT;
+    ~const_weakref (); // asBEHAVE_DESTRUCT;
 
     // The implicit cast operator is used to cast the weak ref type to strong reference of the type.
     // If the object referred to by the weakref is already dead this operator will return null.
