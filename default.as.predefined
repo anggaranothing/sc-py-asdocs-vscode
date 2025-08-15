@@ -1,0 +1,435 @@
+/*
+ * scriptarray
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_arrays.html
+ * RegisterScriptArray_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scriptarray/scriptarray.cpp
+ */
+
+
+/*
+ * The array object is a reference type even if the elements are not, so it's possible to use handles to the array object when passing it around to avoid costly copies.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_arrays.html
+ */
+class array<T> {
+    // A zero-length array of *T*.
+    array (); // asBEHAVE_FACTORY;
+
+    // An array of *T* with *length* elements.
+    array (uint length) explicit; // asBEHAVE_FACTORY;
+
+    // An array of *T* with *length* elements, all set to *value* by default.
+    array (uint length, const T& in value); // asBEHAVE_FACTORY;
+
+    // TODO: Find a way to declare list factory.
+    //array<T>@ array (?& in list) {repeat T}; // asBEHAVE_LIST_FACTORY;
+
+    // The index operator returns the reference of an element allowing it to be inspected or modified.
+    // If the index is out of range, then an exception will be raised.
+    T& opIndex (uint index);
+
+    // The index operator returns the reference of an element allowing it to be inspected or modified.
+    // If the index is out of range, then an exception will be raised.
+    const T& opIndex (uint index) const;
+
+    uint opForBegin () const;
+    bool opForEnd (uint index) const;
+    uint opForNext (uint index) const;
+    const T& opForValue0 (uint index) const;
+    uint opForValue1 (uint index) const;
+
+    // The assignment operator performs a shallow copy of the content.
+    array<T>& opAssign (const array<T>& in arr);
+
+    // Inserts a new element into the array at the specified index.
+    void insertAt (uint index, const T& in value);
+
+    // Inserts another array of elements into the array at the specified index.
+    void insertAt (uint index, const array<T>& arr);
+
+    // Appends an element at the end of the array.
+    void insertLast (const T& in value);
+
+    // Removes the element at the specified index.
+    void removeAt (uint index);
+
+    // Removes the last element of the array.
+    void removeLast ();
+
+    // Removes *count* elements starting from *start*.
+    void removeRange (uint start, uint count);
+
+    // Returns the length of the array.
+    uint length () const;
+
+    // Reverses the order of the elements in the array.
+    void reserve (uint length);
+
+    // Sets the new length of the array.
+    void resize (uint length);
+
+    // Sorts the elements in the array in ascending order.
+    // For object types, this will use the type's opCmp method.
+    void sortAsc ();
+
+    // Sorts the elements in the array in ascending order.
+    // For object types, this will use the type's opCmp method.
+    // The second variant will sort only the elements starting at index *startAt* and the following *count* elements.
+    void sortAsc (uint startAt, uint count);
+
+    // Sorts the elements in the array in descending order.
+    // For object types, this will use the type's opCmp method.
+    void sortDesc ();
+
+    // Sorts the elements in the array in descending order.
+    // For object types, this will use the type's opCmp method.
+    // The second variant will sort only the elements starting at index *startAt* and the following *count* elements.
+    void sortDesc (uint startAt, uint count);
+
+    // Reverses the order of the elements in the array.
+    void reverse ();
+
+    // These will return the index of the first element that has the same value as the wanted value.
+    // For object types, this will use the type's opEquals or opCmp method to compare the value.
+    // For arrays of handles any null handle will be skipped.
+    // If no match is found the methods will return a negative value.
+    int find (const T& in value) const;
+
+    // These will return the index of the first element that has the same value as the wanted value.
+    // For object types, this will use the type's opEquals or opCmp method to compare the value.
+    // For arrays of handles any null handle will be skipped.
+    // If no match is found the methods will return a negative value.
+    int find (uint startAt, const T& in value) const;
+
+    // These will search for a matching address.
+    // These are especially useful for arrays of handles where specific instances of objects are desired, and not just objects that happen to have equal value.
+    // If no match is found the methods will return a negative value.
+    int findByRef (const T& in value) const;
+
+    // These will search for a matching address.
+    // These are especially useful for arrays of handles where specific instances of objects are desired, and not just objects that happen to have equal value.
+    // If no match is found the methods will return a negative value.
+    int findByRef (uint startAt, const T& in value) const;
+
+    // Performs a value comparison on each of the elements in the two arrays and returns true if all match the used operator.
+    bool opEquals (const array<T>& in arr) const;
+
+    // Returns true if the array doesn't hold any elements.
+    bool isEmpty () const;
+
+    // Sort with callback for comparison.
+    funcdef bool less (const T& in a, const T& in b);
+
+    // This method takes as input a callback function to use for comparing two elements when sorting the array.
+    // The callback function should take as parameters two references of the same type of the array elements and it should return a bool.
+    // The return value should be true if the first argument should be placed before the second argument.
+    void sort (const less& in, uint startAt = 0, uint count = uint(-1));
+}
+
+
+/*
+ * scriptdictionary
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_dictionary.html
+ * RegisterScriptDictionary_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scriptdictionary/scriptdictionary.cpp
+ */
+
+
+/*
+ * The dictionaryValue type is how the dictionary object stores the values.
+ * When accessing the values through the dictionary index operator a reference to a dictionaryValue is returned.
+ * The dictionaryValue type itself is a value type, i.e. no handles to it can be held, but it can hold handles to other objects as well as values of any type.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_dictionary.html
+ */
+class dictionaryValue {
+    // FIXME: Is this class constructable?
+    dictionaryValue (); // asBEHAVE_CONSTRUCT;
+
+    // The value assignment operator should be used to copy a value into the dictionaryValue.
+    dictionaryValue& opAssign (const dictionaryValue& in dictvalue);
+
+    // The handle assignment operator should be used to set the dictionaryValue to refer to an object instance.
+    dictionaryValue& opHndlAssign (const ?& in value);
+
+    // The handle assignment operator should be used to set the dictionaryValue to refer to an object instance.
+    dictionaryValue& opHndlAssign (const dictionaryValue& in dictvalue);
+
+    // The value assignment operator should be used to copy a value into the dictionaryValue.
+    dictionaryValue& opAssign (const ?& in value);
+
+    // The value assignment operator should be used to copy a value into the dictionaryValue.
+    dictionaryValue& opAssign (double value);
+
+    // The value assignment operator should be used to copy a value into the dictionaryValue.
+    dictionaryValue& opAssign (int64 value);
+
+    // The cast operator is used to dynamically cast the handle held in the dictionaryValue to the desired type.
+    // If the dictionaryValue doesn't hold a handle, or the handle is not compatible with the desired type, the cast operator will return a null handle.
+    void opCast (?& out value);
+
+    // The conversion operator is used to return a new value of the desired type.
+    // If no value conversion is found, an uninitialized value of the desired type is returned.
+    void opConv (?& out value);
+
+    // The conversion operator is used to return a new value of the desired type.
+    // If no value conversion is found, an uninitialized value of the desired type is returned.
+    int64 opConv ();
+
+    // The conversion operator is used to return a new value of the desired type.
+    // If no value conversion is found, an uninitialized value of the desired type is returned.
+    double opConv ();
+}
+
+// Support foreach.
+class dictionaryIter {}
+
+/*
+ * The dictionary stores key-value pairs, where the key is a string, and the value can be of any type.
+ * Key-value pairs can be added or removed dynamically, making the dictionary a good general purpose container object.
+ * The dictionary object is a reference type, so it's possible to use handles to the dictionary object when passing it around to avoid costly copies.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_dictionary.html
+ */
+class dictionary {
+    // FIXME: Is this constructor correct?
+    dictionary (); // asBEHAVE_FACTORY;
+
+    // TODO: Find a way to declare list factory.
+    //dictionary@ dictionary () {repeat {string, ?}}; // asBEHAVE_LIST_FACTORY;
+
+    // The assignment operator performs a shallow copy of the content.
+    dictionary& opAssign (const dictionary& in dict);
+
+    // Sets a key/value pair in the dictionary. If the key already exists, the value will be changed.
+    void set (const string& in key, const int64& in value);
+
+    // Sets a key/value pair in the dictionary. If the key already exists, the value will be changed.
+    void set (const string& in key, const ?& in value);
+
+    // Sets a key/value pair in the dictionary. If the key already exists, the value will be changed.
+    void set (const string& in key, const double& in value);
+
+    // Retrieves the value corresponding to the key.
+    // The methods return false if the key is not found, and in this case the value will maintain its default value based on the type.
+    bool get (const string& in key, ?& out value) const;
+
+    // Retrieves the value corresponding to the key.
+    // The methods return false if the key is not found, and in this case the value will maintain its default value based on the type.
+    bool get (const string& in key, int64& out value) const;
+
+    // Retrieves the value corresponding to the key.
+    // The methods return false if the key is not found, and in this case the value will maintain its default value based on the type.
+    bool get (const string& in key, double& out value) const;
+
+    // Returns true if the key exists in the dictionary.
+    bool exists (const string& in key) const;
+
+    // Returns true if the dictionary doesn't hold any entries.
+    bool isEmpty () const;
+
+    // Returns the number of keys in the dictionary.
+    uint getSize () const;
+
+    // Removes the key and the corresponding value from the dictionary.
+    // Returns false if the key wasn't found.
+    bool delete (const string& in key);
+
+    // Removes all entries in the dictionary.
+    void deleteAll ();
+
+    // This method returns an array with all of the existing keys in the dictionary.
+    // The order of the keys in the array is undefined.
+    array<string>@ getKeys () const;
+
+    // The index operator takes a string for the key, and returns a reference to the value.
+    // If the key/value pair doesn't exist it will be inserted with a null value.
+    dictionaryValue& opIndex (const string& in key);
+
+    // The index operator takes a string for the key, and returns a reference to the value.
+    // If the key/value pair doesn't exist it will be inserted with a null value.
+    const dictionaryValue& opIndex (const string& in key) const;
+
+    dictionaryIter@ opForBegin () const;
+    bool opForEnd (dictionaryIter@+ it) const;
+    dictionaryIter@+ opForNext (dictionaryIter@+ it) const;
+    const dictionaryValue& opForValue0 (dictionaryIter@+ it) const;
+    const string& opForValue1 (dictionaryIter@+ it) const;
+}
+
+
+/*
+ * scriptany
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_addon_any.html
+ * RegisterScriptAny_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scriptany/scriptany.cpp
+ */
+
+
+/*
+ * The any type is a generic container that can hold any value.
+ * It is a reference type.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_addon_any.html
+ */
+class any {
+    // The default constructor creates an empty object.
+    any (); // asBEHAVE_FACTORY;
+
+    // Initializes the object with the provided value.
+    any (?& in value) explicit; // asBEHAVE_FACTORY;
+
+    // Initializes the object with the provided value.
+    // The int64 overloads make sure that all numbers are converted to 64bit before being stored in the object.
+    any (const int64& in value) explicit; // asBEHAVE_FACTORY;
+
+    // Initializes the object with the provided value.
+    // The double overloads make sure that all numbers are converted to 64bit before being stored in the object.
+    any (const double& in value) explicit; // asBEHAVE_FACTORY;
+
+    // The assignment operator will copy the contained value from the other object.
+    any& opAssign (any& in other);
+
+    // These methods sets the value in the object.
+    void store (?& in value);
+
+    // These methods sets the value in the object.
+    // The int64 overloads make sure that all numbers are converted to 64bit before being stored in the object.
+    void store (const int64& in value);
+
+    // These methods sets the value in the object.
+    // The double overloads make sure that all numbers are converted to 64bit before being stored in the object.
+    void store (const double& in value);
+
+    // These methods retrieve the value stored in the object.
+    // The methods will return true if the stored value is compatible with the requested type.
+    bool retrieve (?& out value) const;
+
+    // These methods retrieve the value stored in the object.
+    // The methods will return true if the stored value is compatible with the requested type.
+    bool retrieve (int64& out value) const;
+
+    // These methods retrieve the value stored in the object.
+    // The methods will return true if the stored value is compatible with the requested type.
+    bool retrieve (double& out value) const;
+}
+
+
+/*
+ * scripthandle
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
+ * RegisterScriptHandle_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scripthandle/scripthandle.cpp
+ */
+
+
+/*
+ * The ref type works like a generic object handle.
+ * Normally a handle can only refer to objects of a specific type or those related to it, however not all object types are related, and this is where ref comes in.
+ * Being completely generic it can refer to any object type (as long as it is a reference type).
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
+ */
+class ref {
+    // FIXME: Is this constructor correct?
+    ref (); // asBEHAVE_CONSTRUCT;
+    ref (const ref& in other); // asBEHAVE_CONSTRUCT;
+    ref (const ?& in value); // asBEHAVE_CONSTRUCT;
+
+    // The cast operator is used to perform a dynamic cast to the desired type.
+    // If the type is not compatible with the object referred to by the ref type this will return null.
+    void opCast (?& out value);
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    ref& opHndlAssign (const ref& in other);
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    ref& opHndlAssign (const ?& in value);
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const ref& in other) const;
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const ?& in value) const;
+}
+
+
+/*
+ * weakref
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_weakref.html
+ * RegisterScriptWeakRef_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/weakref/weakref.cpp
+ */
+
+
+/*
+ * A weakref object can be used in place of the handle where the reference to the object is needed but the object shouldn't be kept alive.
+ * This type is for non-const handles.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
+ */
+class weakref<T> {
+    // FIXME: Is this constructor correct?
+    weakref (); // asBEHAVE_CONSTRUCT;
+    weakref (T@+ value) explicit; // asBEHAVE_CONSTRUCT;
+
+    // The implicit cast operator is used to cast the weak ref type to strong reference of the type.
+    // If the object referred to by the weakref is already dead this operator will return null.
+    T@ opImplCast ();
+
+    // This does the exact same thing as the implicit cast operator.
+    // It is just a more explicit way of writing it.
+    T@ get () const;
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    weakref<T>& opHndlAssign (const weakref<T>& in other);
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    weakref<T>& opHndlAssign (T@ value);
+
+    // The value assignment operator is used when one weakref object is copied to another.
+    weakref<T>& opAssign (const weakref<T>& in other);
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const weakref<T>& in other) const;
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const T@+ value) const;
+}
+
+
+/*
+ * A const_weakref object can be used in place of the handle where the reference to the object is needed but the object shouldn't be kept alive.
+ * This type is for const handles.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
+ */
+class const_weakref<T> {
+    // FIXME: Is this constructor correct?
+    const_weakref (); // asBEHAVE_CONSTRUCT;
+    const_weakref (const T@+ value) explicit; // asBEHAVE_CONSTRUCT;
+
+    // The implicit cast operator is used to cast the weak ref type to strong reference of the type.
+    // If the object referred to by the weakref is already dead this operator will return null.
+    const T@ opImplCast () const;
+
+    // This does the exact same thing as the implicit cast operator.
+    // It is just a more explicit way of writing it.
+    const T@ get () const;
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    const_weakref<T>& opHndlAssign (const const_weakref<T>& in other);
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    const_weakref<T>& opHndlAssign (const weakref<T>& in other);
+
+    // The handle assignment operator is used to set the object that the referred to by the ref type.
+    const_weakref<T>& opHndlAssign (const T@ value);
+
+    // The value assignment operator is used when one weakref object is copied to another.
+    const_weakref<T>& opAssign (const const_weakref<T>& in other);
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const const_weakref<T>& in other) const;
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const weakref<T>& in other) const;
+
+    // The identity operators are used to compare the address of the object referred to by the ref type.
+    bool opEquals (const T@+ value) const;
+}
