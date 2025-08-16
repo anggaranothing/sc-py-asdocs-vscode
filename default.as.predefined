@@ -1,3 +1,4 @@
+//////////////////// START OF DEFAULT SYNTAXES ////////////////////
 /*
  * scriptarray
  * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_arrays.html
@@ -437,3 +438,4 @@ class const_weakref<T> {
     // The identity operators are used to compare the address of the object referred to by the ref type.
     bool opEquals (const T@+ value) const;
 }
+//////////////////// END OF DEFAULT SYNTAXES ////////////////////
