@@ -106,6 +106,20 @@ def get_name (vdf: _VDFDict) -> str:
         return vdf["ClassName"]
     return ""
 
+def fix_class_constructor (vdf: _VDFDict, parent: _VDFDict) -> str:
+    result = get_name(vdf)
+    parent_name = get_name(parent)
+    pattern = r"(.+?) (.+?)(\(.*?\))" # e.g. "void string()", "Arguments@ Arguments(const Arguments& in other)".
+    matched = _rematch(pattern, result)
+    if not matched:
+        return result
+    func_name = matched.groups()[1]
+    if func_name != parent_name:
+        return result
+    # Delete return datatype, straight into func name and its arguments.
+    result = _resub(pattern, r"\2\3", result)
+    return result
+
 def get_link (link: str) -> str:
     return f"https://r4to0.github.io/asautodocs/docs/{link}.htm"
 
@@ -181,9 +195,10 @@ def _write_basic (fp, vdf: _VDFDict, datatype: str, txt: str, parent: tuple[str,
     param2 = datatype.upper()
     param3 = ""
     if parent:
+        parent_datatype, parent_vdf = parent
         param3 = f"[{param2}]"
-        datatype = get_name(parent[1])
-        param2 = f"{parent[0].upper()} {datatype}"
+        datatype = get_name(parent_vdf)
+        param2 = f"{parent_datatype.upper()} {datatype}"
     yield f'[{namespace}][{param2}]{param3} Writing "{name}"...'
     with Namespace(fp, vdf):
         write_comment(fp, vdf, datatype)
@@ -202,7 +217,13 @@ def iter_write_property (fp, vdf: _VDFDict, parent: tuple[str,_VDFDict]|None=Non
     return _write_basic(fp, vdf, "prop", f"{get_name(vdf)};", parent)
 
 def iter_write_function (fp, vdf: _VDFDict, parent: tuple[str,_VDFDict]|None=None):
-    return _write_basic(fp, vdf, "func", f"{fix_func_declaration(get_name(vdf))};", parent)
+    declaration = get_name(vdf)
+    if parent:
+        parent_datatype, parent_vdf = parent
+        if parent_datatype.lower() == "class":
+            declaration = fix_class_constructor(vdf, parent_vdf)
+    declaration = fix_func_declaration(declaration)
+    return _write_basic(fp, vdf, "func", f"{declaration};", parent)
 
 class Enum (DescriptiveBlock):
     def __init__ (self, fp, vdf: _VDFDict):
@@ -256,20 +277,6 @@ class Class (DescriptiveBlock):
         super().__init__(fp, vdf)
         self._prefix = f"class {get_name(self._vdf)}"
 
-def fix_class_constructor (vdf: _VDFDict, parent: _VDFDict) -> str:
-    result = get_name(vdf)
-    parent_name = get_name(parent)
-    pattern = r"(.+?) (.+?)(\(.*?\))" # e.g. "void string()", "Arguments@ Arguments(const Arguments& in other)".
-    matched = _rematch(pattern, result)
-    if not matched:
-        return result
-    func_name = matched.groups()[1]
-    if func_name != parent_name:
-        return result
-    # Delete return datatype, straight into func name and its arguments.
-    result = _resub(pattern, r"\2\3", result)
-    return result
-
 def iter_write_class (fp, vdf: _VDFDict):
     namespace = get_namespace(vdf) or "<Global>"
     name = get_name(vdf)
@@ -279,7 +286,6 @@ def iter_write_class (fp, vdf: _VDFDict):
             for v in reversed([*vdf["Properties"].itervalues()]):
                 yield from iter_write_property(fp, v, ("class", vdf))
             for v in reversed([*vdf["Methods"].itervalues()]):
-                v[0, "Declaration"] = fix_class_constructor(v, vdf)
                 yield from iter_write_function(fp, v, ("class", vdf))
     fp.write("\n")
 
