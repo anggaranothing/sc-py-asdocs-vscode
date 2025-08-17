@@ -122,16 +122,14 @@ def write_comment (fp, vdf: _VDFDict, link=None):
         fp.write("\n")
     if link:
         link = str(link)
-        linklw = link.lower()
-        if "typedef" in linklw:
+        if link == "typedef":
             link = "Typedefs"
-        elif "funcdef" in linklw:
+        elif link == "funcdef":
             link = "FuncDefs"
-        else:
-            if "func" in linklw:
-                link = "Functions"
-            elif "prop" in linklw:
-                link = "Properties"
+        elif link == "func":
+            link = "Functions"
+        elif link == "prop":
+            link = "Properties"
         if comment and not ends_with_newline:
             fp.write("//")
             fp.write("\n")
@@ -155,7 +153,7 @@ class DescriptiveBlock (Block):
     def __init__ (self, fp, vdf: _VDFDict):
         super().__init__(fp, get_name(vdf))
         self._vdf = vdf
-    
+
     def __enter__ (self):
         write_comment(self._fp, self._vdf, get_name(self._vdf))
         super().__enter__()
@@ -288,10 +286,10 @@ def iter_write_class (fp, vdf: _VDFDict):
 def iter_build (vdf: _VDFDict, outpath: _Path):
     if not isinstance(vdf, _VDFDict):
         raise TypeError("Invalid VDF instance")
-    
+
     if "Angelscript Documentation" not in vdf or not isinstance(vdf := vdf["Angelscript Documentation"], _VDFDict):
         raise ValueError("Node \"Angelscript Documentation\" must be a block node")
-    
+
     if "DocVersion" not in vdf:
         raise ValueError("Document version key missing. Old Format?")
     docver = int(vdf["DocVersion"])
