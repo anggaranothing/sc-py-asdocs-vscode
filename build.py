@@ -19,6 +19,7 @@ from pathlib import (
 from re import (
     sub as _resub,
     match as _rematch,
+    search as _research,
 )
 from datetime import (
     datetime as _dt,
@@ -289,6 +290,18 @@ def iter_write_class (fp, vdf: _VDFDict):
                 yield from iter_write_function(fp, v, ("class", vdf))
     fp.write("\n")
 
+def read_scriptbaseclasses () -> str:
+    result = ""
+    pattern = r"(?s:abstract class [\w\d]+\s*:\s*ScriptClassInterface\s*{.*})"
+    curdir = _Path()
+    for path in sorted(curdir.glob("console*.log")):
+        txt = path.read_text()
+        matched = _research(pattern, txt)
+        if matched:
+            result = matched.group(0)
+            break
+    return result
+
 def iter_build (vdf: _VDFDict, outpath: _Path):
     if not isinstance(vdf, _VDFDict):
         raise TypeError("Invalid VDF instance")
@@ -339,6 +352,13 @@ def iter_build (vdf: _VDFDict, outpath: _Path):
         for k, func in kf.items():
             for item in reversed([*vdf[k].itervalues()]):
                 yield from func(fp, item)
+        fp.write("\n")
+        fp.write("//////////////////// START OF SCRIPT BASE CLASSES ////////////////////")
+        fp.write("\n")
+        fp.write(read_scriptbaseclasses())
+        fp.write("\n")
+        fp.write("//////////////////// END OF SCRIPT BASE CLASSES ////////////////////")
+        fp.write("\n")
 
 def asdocs2vdf (filepath) -> _VDFDict|None:
     filepath = _Path(filepath)
