@@ -364,7 +364,7 @@ class ref {
  * A weakref object can be used in place of the handle where the reference to the object is needed but the object shouldn't be kept alive.
  * This type is for non-const handles.
  *
- * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_weakref.html
  */
 class weakref<T> {
     // FIXME: Is this constructor correct?
@@ -400,7 +400,7 @@ class weakref<T> {
  * A const_weakref object can be used in place of the handle where the reference to the object is needed but the object shouldn't be kept alive.
  * This type is for const handles.
  *
- * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_weakref.html
  */
 class const_weakref<T> {
     // FIXME: Is this constructor correct?
