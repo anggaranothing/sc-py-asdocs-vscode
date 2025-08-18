@@ -607,4 +607,51 @@ class complex {
     // Swizzle operators return a complex value with the ordering of the real and imaginary parts as indicated by the name.
     void set_ir (const complex& in other) property;
 }
+
+
+/*
+ * scriptgrid
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_addon_grid.html
+ * RegisterScriptGrid_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scriptgrid/scriptgrid.cpp
+ */
+
+
+/*
+ * The grid type is a template object that allow the scripts to declare 2D grids of any type.
+ * In many ways it is similar to the array template object, but it is specialized for use with areas.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_addon_grid.html
+ */
+class grid<T> {
+    // The constructors initializes the grid object.
+    // The default constructor will create an zero sized grid.
+    grid (); // asBEHAVE_FACTORY
+
+    // The constructors initializes the grid object.
+    grid (uint width, uint height); // asBEHAVE_FACTORY
+
+    // The constructors initializes the grid object.
+    grid (uint width, uint height, const T& in fillValue); // asBEHAVE_FACTORY
+
+    // TODO: Find a way to declare list construct.
+    //grid (int&in type, int&in list) {repeat {repeat_same T}}; // asBEHAVE_LIST_FACTORY
+
+    // The index operator returns a reference to one of the elements.
+    // If the index is out of bounds a script exception will be raised.
+    T& opIndex (uint x, uint y);
+
+    // The index operator returns a reference to one of the elements.
+    // If the index is out of bounds a script exception will be raised.
+    const T& opIndex (uint x, uint y) const;
+
+    // Resizes the grid to the new dimension.
+    // The elements that still fit in the grid will keep their values.
+    void resize (uint width, uint height);
+
+    // Returns the width of the grid.
+    uint width () const;
+
+    // Returns the height of the grid.
+    uint height () const;
+}
 //////////////////// END OF DEFAULT SYNTAXES ////////////////////
