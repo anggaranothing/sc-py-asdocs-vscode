@@ -654,4 +654,9 @@ class grid<T> {
     // Returns the height of the grid.
     uint height () const;
 }
+
+// A shortcut to `CEntityFuncs.CastToScriptClass`.
+//
+// @link https://r4to0.github.io/asautodocs/docs/CEntityFuncs.htm
+ScriptClassInterface@ CastToScriptClass(CBaseEntity@ pEntity);
 //////////////////// END OF DEFAULT SYNTAXES ////////////////////
