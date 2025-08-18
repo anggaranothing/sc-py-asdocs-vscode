@@ -21,7 +21,7 @@ class array<T> {
     // An array of *T* with *length* elements, all set to *value* by default.
     array (uint length, const T& in value); // asBEHAVE_FACTORY;
 
-    // TODO: Find a way to declare list factory.
+    // TODO: Find a way to declare list construct.
     //array<T>@ array (?& in list) {repeat T}; // asBEHAVE_LIST_FACTORY;
 
     // The index operator returns the reference of an element allowing it to be inspected or modified.
@@ -195,7 +195,7 @@ class dictionary {
     // FIXME: Is this constructor correct?
     dictionary (); // asBEHAVE_FACTORY;
 
-    // TODO: Find a way to declare list factory.
+    // TODO: Find a way to declare list construct.
     //dictionary@ dictionary () {repeat {string, ?}}; // asBEHAVE_LIST_FACTORY;
 
     // The assignment operator performs a shallow copy of the content.
@@ -396,7 +396,6 @@ class weakref<T> {
     bool opEquals (const T@+ value) const;
 }
 
-
 /*
  * A const_weakref object can be used in place of the handle where the reference to the object is needed but the object shouldn't be kept alive.
  * This type is for const handles.
@@ -437,5 +436,175 @@ class const_weakref<T> {
 
     // The identity operators are used to compare the address of the object referred to by the ref type.
     bool opEquals (const T@+ value) const;
+}
+
+
+/*
+ * scriptmath
+ * https://www.angelcode.com/angelscript/sdk/docs/manual/doc_addon_math.html
+ * RegisterScriptMath_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scriptmath/scriptmath.cpp
+ * RegisterScriptMathComplex_Native() at https://github.com/anjo76/angelscript/blob/master/sdk/add_on/scriptmath/scriptmathcomplex.cpp
+ */
+
+
+// Translates the float from IEEE 754 representation.
+// This can be used if one wishes to directly inspect or manipulate the floating point value in the binary representation.
+float fpFromIEEE (uint raw);
+
+// Translates the float from IEEE 754 representation.
+// This can be used if one wishes to directly inspect or manipulate the floating point value in the binary representation.
+double fpFromIEEE (uint64 raw);
+
+// Translates the float to IEEE 754 representation.
+// This can be used if one wishes to directly inspect or manipulate the floating point value in the binary representation.
+uint fpToIEEE (float fp);
+
+// Translates the float to IEEE 754 representation.
+// This can be used if one wishes to directly inspect or manipulate the floating point value in the binary representation.
+uint64 fpToIEEE (double fp);
+
+// Due to numerical errors with the binary representation of real numbers it is often difficult to do direct comparisons of two float values.
+// The closeTo function will return true of the two values are almost equal, allowing for a small difference up to the size of the epsilon value.
+bool closeTo (float a, float b, float epsilon = 0.00001f);
+
+// Due to numerical errors with the binary representation of real numbers it is often difficult to do direct comparisons of two float values.
+// The closeTo function will return true of the two values are almost equal, allowing for a small difference up to the size of the epsilon value.
+bool closeTo (double a, double b, double epsilon = 0.0000000001);
+
+// Calculates the trigonometric functions cosine.
+// The input angle should be given in radian.
+float cos (float rad);
+
+// Calculates the trigonometric functions sine.
+// The input angle should be given in radian.
+float sin (float rad);
+
+// Calculates the trigonometric functions tangent.
+// The input angle should be given in radian.
+float tan (float rad);
+
+// Calculates the inverse of the trigonometric functions cosine.
+// The returned angle is given in radian.
+float acos (float val);
+
+// Calculates the inverse of the trigonometric functions sine.
+// The returned angle is given in radian.
+float asin (float val);
+
+// Calculates the inverse of the trigonometric functions tangent.
+// The returned angle is given in radian.
+float atan (float val);
+
+// Calculates the inverse of the trigonometric function tangent.
+// The input is the *y* and *x* proportions.
+// The returned angle is given in radian.
+float atan2 (float y, float x);
+
+// Calculates the hyperbolic of the cosine.
+// The input angle should be given in radian.
+float cosh (float rad);
+
+// Calculates the hyperbolic of the sine.
+// The input angle should be given in radian.
+float sinh (float rad);
+
+// Calculates the hyperbolic of the tangent.
+// The input angle should be given in radian.
+float tanh (float rad);
+
+// Calculates the logarithm of the input value.
+// `log` is the natural logarithm.
+float log (float val);
+
+// Calculates the logarithm of the input value.
+// `log10` is the base-10 logarithm.
+float log10 (float val);
+
+// Calculates the based raised to the power of exponent.
+float pow (float val, float exp);
+
+// Calculates the square root of the value.
+float sqrt (float val);
+
+// `ceil` returns the closest integer number that is higher or equal to the input.
+float ceil (float val);
+
+// `floor` returns the closest integer number that is lower or equal to the input.
+float floor (float val);
+
+// Returns the absolute value.
+float abs (float val);
+
+// Returns the fraction of the number, i.e. what remains after taking away the integral number.
+float fraction (float val);
+
+/*
+ * This type represents a complex number with real and imaginary parts.
+ *
+ * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_addon_math.html
+ */
+class complex {
+    // The constructors allow for implicit construction.
+    complex (); // asBEHAVE_CONSTRUCT
+
+    // The constructors allow for making a copy.
+    complex (const complex& in other); // asBEHAVE_CONSTRUCT
+
+    // The constructors allow for implicit conversion from float.
+    complex (float r); // asBEHAVE_CONSTRUCT
+
+    // The constructors allow for explicit initialization from two float values.
+    complex (float r, float i); // asBEHAVE_CONSTRUCT
+
+    // TODO: Find a way to declare list construct.
+    //complex (const int &in) {float, float}; // asBEHAVE_LIST_CONSTRUCT
+
+    // Retrieves the real part of the complex value.
+    float r;
+
+    // Retrieves the imaginary part of the complex value.
+    float i;
+
+    // Assign and compound assignment of complex values.
+    complex& opAddAssign (const complex& in other);
+
+    // Assign and compound assignment of complex values.
+    complex& opSubAssign (const complex& in other);
+
+    // Assign and compound assignment of complex values.
+    complex& opMulAssign (const complex& in other);
+
+    // Assign and compound assignment of complex values.
+    complex& opDivAssign (const complex& in other);
+
+    // Compares two complex values.
+    bool opEquals (const complex& in other) const;
+
+    // Math operators on complex values.
+    complex opAdd (const complex& in other) const;
+
+    // Math operators on complex values.
+    complex opSub (const complex& in other) const;
+
+    // Math operators on complex values.
+    complex opMul (const complex& in other) const;
+
+    // Math operators on complex values.
+    complex opDiv (const complex& in other) const;
+
+    // Returns the absolute (magnitude) of the complex value.
+    float abs () const;
+
+    // Swizzle operators return a complex value with the ordering of the real and imaginary parts as indicated by the name.
+    complex get_ri () const property;
+
+    // Swizzle operators return a complex value with the ordering of the real and imaginary parts as indicated by the name.
+    complex get_ir () const property;
+
+    // Swizzle operators return a complex value with the ordering of the real and imaginary parts as indicated by the name.
+    void set_ri (const complex& in other) property;
+
+    // Swizzle operators return a complex value with the ordering of the real and imaginary parts as indicated by the name.
+    void set_ir (const complex& in other) property;
 }
 //////////////////// END OF DEFAULT SYNTAXES ////////////////////
