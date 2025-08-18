@@ -18,11 +18,11 @@ Converts `asdocs.txt` into `as.predefined` for use in [sashi0034/angel-lsp](http
 
 ## How to Extract Script Base Classes from Game
 
-* Copy "extras/extract_asbaseclasses.cfg" file into "Sven Co-op/svencoop_addon" folder,
+* Copy [`extras/extract_asbaseclasses.cfg`](extras/extract_asbaseclasses.cfg) file into Sven Co-op game addon folder ("`Sven Co-op/svencoop_addon`"),
 * Open a Terminal/Command Prompt,
-* Execute this command: steam -applaunch 225840 +exec extract_asbaseclasses.cfg
+* Execute this command: `steam -applaunch 225840 +exec extract_asbaseclasses.cfg`
 * Wait until a new game has been closed automatically,
-* A file named "console-XXXX-XX-XX.log" should be created in Sven Co-op game folder,
+* A file named `console-XXXX-XX-XX.log` should be created in Sven Co-op game folder,
 * Copy that file into "sc-py-asdocs-vscode" folder,
 * Run the Python script.
 
