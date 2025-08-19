@@ -93,10 +93,13 @@ def fix_func_declaration (value: str) -> str:
         result = result.replace(k, v)
     return result
 
-def get_namespace (vdf: _VDFDict) -> str:
+def get_namespace (vdf: _VDFDict, default: str="<Global>") -> str:
+    result = ""
     if "Namespace" in vdf:
-        return vdf["Namespace"]
-    return ""
+        result = vdf["Namespace"]
+    if not result:
+        result = default
+    return result
 
 def get_name (vdf: _VDFDict) -> str:
     if "Name" in vdf:
@@ -178,7 +181,7 @@ class DescriptiveBlock (Block):
 class Namespace (Block):
     def __init__ (self, fp, vdf: _VDFDict):
         super().__init__(fp)
-        self._namespaces = get_namespace(vdf).split("::")
+        self._namespaces = get_namespace(vdf, "").split("::")
         if not self._namespaces[0]:
             del self._namespaces[0]
 
@@ -193,7 +196,7 @@ class Namespace (Block):
             super().__exit__(exc_type, exc_value, traceback)
 
 def _write_basic (fp, vdf: _VDFDict, datatype: str, txt: str, parent: tuple[str,_VDFDict]|None=None):
-    namespace = get_namespace(vdf) or "<Global>"
+    namespace = get_namespace(vdf)
     name = get_name(vdf)
     param2 = datatype.upper()
     param3 = ""
@@ -234,7 +237,7 @@ class Enum (DescriptiveBlock):
         self._prefix = f"enum {get_name(self._vdf)}"
 
 def _write_enum_value (fp, vdf: _VDFDict, parent: _VDFDict):
-    namespace = get_namespace(vdf) or "<Global>"
+    namespace = get_namespace(parent)
     parent_name = get_name(parent)
     name = get_name(vdf)
     value = vdf["Value"]
@@ -251,7 +254,7 @@ def _write_enum_value (fp, vdf: _VDFDict, parent: _VDFDict):
     fp.write("\n")
 
 def iter_write_enum (fp, vdf: _VDFDict):
-    namespace = get_namespace(vdf) or "<Global>"
+    namespace = get_namespace(vdf)
     name = get_name(vdf)
     yield f'[{namespace}][ENUM] Writing "{name}"...'
     with Namespace(fp, vdf):
@@ -266,7 +269,7 @@ class Interface (DescriptiveBlock):
         self._prefix = f"interface {get_name(self._vdf)}"
 
 def iter_write_interface (fp, vdf: _VDFDict):
-    namespace = get_namespace(vdf) or "<Global>"
+    namespace = get_namespace(vdf)
     name = get_name(vdf)
     yield f'[{namespace}][INTERFACE] Writing "{name}"...'
     with Namespace(fp, vdf):
@@ -281,7 +284,7 @@ class Class (DescriptiveBlock):
         self._prefix = f"class {get_name(self._vdf)}"
 
 def iter_write_class (fp, vdf: _VDFDict):
-    namespace = get_namespace(vdf) or "<Global>"
+    namespace = get_namespace(vdf)
     name = get_name(vdf)
     yield f'[{namespace}][CLASS] Writing "{name}"...'
     with Namespace(fp, vdf):
