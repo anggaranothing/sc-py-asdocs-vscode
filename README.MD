@@ -23,7 +23,7 @@ Converts `asdocs.txt` into `as.predefined` for use in [sashi0034/angel-lsp](http
 * Execute this command: `steam -applaunch 225840 +exec extract_asbaseclasses.cfg`
 * Wait until a new game has been closed automatically,
 * A file named `console-XXXX-XX-XX.log` should be created in Sven Co-op game folder,
-* Copy that file into "sc-py-asdocs-vscode" folder,
+* Copy that file into this directory,
 * Run the Python script.
 
 ## How to Run
