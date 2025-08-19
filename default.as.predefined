@@ -21,8 +21,7 @@ class array<T> {
     // An array of *T* with *length* elements, all set to *value* by default.
     array (uint length, const T& in value); // asBEHAVE_FACTORY;
 
-    // TODO: Find a way to declare list construct.
-    //array<T>@ array (?& in list) {repeat T}; // asBEHAVE_LIST_FACTORY;
+    array (int& in type, int& in list) {repeat T}; // asBEHAVE_LIST_FACTORY;
 
     // The index operator returns the reference of an element allowing it to be inspected or modified.
     // If the index is out of range, then an exception will be raised.
@@ -142,7 +141,6 @@ class array<T> {
  * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_dictionary.html
  */
 class dictionaryValue {
-    // FIXME: Is this class constructable?
     dictionaryValue (); // asBEHAVE_CONSTRUCT;
     ~dictionaryValue (); // asBEHAVE_DESTRUCT;
 
@@ -192,11 +190,8 @@ class dictionaryIter {}
  * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_dictionary.html
  */
 class dictionary {
-    // FIXME: Is this constructor correct?
     dictionary (); // asBEHAVE_FACTORY;
-
-    // TODO: Find a way to declare list construct.
-    //dictionary@ dictionary () {repeat {string, ?}}; // asBEHAVE_LIST_FACTORY;
+    dictionary (int& in) {repeat {string, ?}}; // asBEHAVE_LIST_FACTORY;
 
     // The assignment operator performs a shallow copy of the content.
     dictionary& opAssign (const dictionary& in dict);
@@ -329,7 +324,6 @@ class any {
  * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_ref.html
  */
 class ref {
-    // FIXME: Is this constructor correct?
     ref (); // asBEHAVE_CONSTRUCT;
     ref (const ref& in other); // asBEHAVE_CONSTRUCT;
     ref (const ?& in value); // asBEHAVE_CONSTRUCT;
@@ -367,7 +361,6 @@ class ref {
  * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_weakref.html
  */
 class weakref<T> {
-    // FIXME: Is this constructor correct?
     weakref (); // asBEHAVE_CONSTRUCT;
     weakref (T@+ value) explicit; // asBEHAVE_CONSTRUCT;
     ~weakref (); // asBEHAVE_DESTRUCT;
@@ -403,7 +396,6 @@ class weakref<T> {
  * @link https://www.angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_weakref.html
  */
 class const_weakref<T> {
-    // FIXME: Is this constructor correct?
     const_weakref (); // asBEHAVE_CONSTRUCT;
     const_weakref (const T@+ value) explicit; // asBEHAVE_CONSTRUCT;
     ~const_weakref (); // asBEHAVE_DESTRUCT;
@@ -556,8 +548,7 @@ class complex {
     // The constructors allow for explicit initialization from two float values.
     complex (float r, float i); // asBEHAVE_CONSTRUCT
 
-    // TODO: Find a way to declare list construct.
-    //complex (const int &in) {float, float}; // asBEHAVE_LIST_CONSTRUCT
+    complex (const int& in) {float, float}; // asBEHAVE_LIST_CONSTRUCT
 
     // Retrieves the real part of the complex value.
     float r;
@@ -633,8 +624,7 @@ class grid<T> {
     // The constructors initializes the grid object.
     grid (uint width, uint height, const T& in fillValue); // asBEHAVE_FACTORY
 
-    // TODO: Find a way to declare list construct.
-    //grid (int&in type, int&in list) {repeat {repeat_same T}}; // asBEHAVE_LIST_FACTORY
+    grid (int& in type, int& in list) {repeat {repeat_same T}}; // asBEHAVE_LIST_FACTORY
 
     // The index operator returns a reference to one of the elements.
     // If the index is out of bounds a script exception will be raised.
