@@ -1,3 +1,5 @@
+# Moved to https://codeberg.org/anggaranothing/svencoop-py-asdocs-vscode
+
 # sc-py-asdocs-vscode
 
 Converts `asdocs.txt` into `as.predefined` for use in [sashi0034/angel-lsp](https://github.com/sashi0034/angel-lsp) VSCode extension.
